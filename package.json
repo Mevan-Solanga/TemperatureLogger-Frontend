@@ -1,0 +1,12 @@
+{
+    "name": "basic-socket",
+    "version": "0.0.1",
+    "description": "Communication from an HTML document to a NodeJS using socket.io",
+    "dependencies": {
+        "@serialport/parser-readline": "^12.0.0",
+        "chart.js": "^4.4.2",
+        "express": "^4.19.2",
+        "serialport": "^12.0.0",
+        "socket.io": "^4.7.5"
+    }
+}
