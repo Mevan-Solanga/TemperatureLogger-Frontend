@@ -4,16 +4,98 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sensor Readings</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f5f5f5;
+            margin: 0;
+            padding: 0;
+        }
+        #header {
+            text-align: center;
+            margin-bottom: 20px;
+            position: relative;
+        }
+        #header h1 {
+            font-size: 24px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 10px; /* Added margin bottom for spacing */
+        }
+        #line {
+            position: absolute;
+            left: 150px;
+            right: 150px;
+            top: 40px; /* Adjust distance below heading */
+            height: 2px;
+            background-color: #333;
+        }
+        #sensorTableContainer {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 90%;
+            max-width: 800px;
+            height: 200px; /* Fixed height */
+            overflow-y: auto; /* Enable vertical scrolling */
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            border-radius: 10px;
+        }
+        th, td {
+            padding: 12px 16px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        th {
+            background-color: #f2f2f2;
+            font-weight: 600; /* Semi-bold */
+            color: #333;
+            text-transform: uppercase;
+        }
+        tr:last-child td {
+            border-bottom: none;
+        }
+    </style>
 </head>
 <body>
-    <div id="sensorReadings"></div>
-
+    <div id="header">
+        <h1>Data Logger</h1>
+        <div id="line"></div> <!-- Line below the heading -->
+    </div>
+    <div id="sensorTableContainer">
+        <table id="sensorTable">
+            <thead>
+                <tr>
+                    <th>Time</th>
+                    <th>Temperature (°C)</th>
+                    <th>Humidity (%)</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Table body will be dynamically populated by JavaScript -->
+            </tbody>
+        </table>
+    </div>
     <script>
-        const socket = new WebSocket('ws://localhost:3000'); // Connect to the WebSocket server
-
+        const socket = new WebSocket('ws://localhost:3000');
         socket.onmessage = function(event) {
-            const sensorReadings = document.getElementById('sensorReadings');
-            sensorReadings.innerHTML += '<p>' + event.data + '</p>'; // Display sensor readings
+            const sensorData = event.data.split(',');
+            const time = new Date().toLocaleTimeString();
+            const tableBody = document.querySelector('#sensorTable tbody');
+            const newRow = tableBody.insertRow(0); // Insert at the beginning
+            const timeCell = newRow.insertCell();
+            timeCell.textContent = time;
+            const tempCell = newRow.insertCell();
+            tempCell.textContent = sensorData[0];
+            const humCell = newRow.insertCell();
+            humCell.textContent = sensorData[1];
         };
     </script>
 </body>
